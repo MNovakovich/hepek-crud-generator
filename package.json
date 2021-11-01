@@ -1,0 +1,29 @@
+{
+  "name": "nest-crud-hepek",
+  "version": "1.0.0",
+  "description": "Generate Nest crud based on database  with models, controller and services",
+  "main": "lib/index.js",
+  "types": "lib",
+  "scripts": {
+    "dev": "tsc --watch",
+    "build": "tsc -p ."
+  },
+  "keywords": [
+    "nestjs",
+    "crud",
+    "typeorm",
+    "crud",
+    "generator"
+  ],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "typescript": "^4.4.4"
+  },
+  "dependencies": {
+    "commander": "^8.3.0",
+    "inquirer": "^8.2.0",
+    "mysql2": "^2.3.2",
+    "typeorm-model-generator": "^0.4.6"
+  }
+}
