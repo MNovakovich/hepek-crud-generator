@@ -1,31 +1,32 @@
 #!/usr/bin/env node
-// index.ts
-import { Command, InvalidArgumentError } from "commander";
-import { GenerateModels } from "./commands";
-import { runNpmCommand } from "./utils";
-var inquirer = require("inquirer");
+import { ModelsBuilder } from './classes/ModelsBuilder';
+import { Command, InvalidArgumentError } from 'commander';
+import { GenerateModels } from './commands';
+import { runNpmCommand } from './utils';
+import dummyAnswers from './testdata';
+var inquirer = require('inquirer');
 
-const fs = require("fs");
-const path = require("path");
+const fs = require('fs');
+const path = require('path');
 const program = new Command();
-program.version("0.0.1");
+program.version('0.0.1');
+
+new ModelsBuilder(dummyAnswers);
 
 const generateModels = new GenerateModels(program, inquirer);
 
 generateModels.create((answers) => {
   //  execSync('npm install moment', { stdio: 'inherit', cwd: 'path/to/dir' });
-  if (answers.framework === "nestjs") {
+  if (answers.framework === 'nestjs') {
     if (answers.next_crud) {
       runNpmCommand(
-        "npm i @nestjsx/crud @nestjsx/crud-request @nestjsx/crud-typeorm"
+        'npm i @nestjsx/crud @nestjsx/crud-request @nestjsx/crud-typeorm'
       );
     }
-    console.log("create next crud");
-  } else if (answers.framework === "expressjs") {
-    console.log("create expressjs");
+    // console.log("create next crud");
+  } else if (answers.framework === 'expressjs') {
+    console.log('create expressjs');
   }
-
-  console.log(answers);
 });
 
 program.parse(process.argv);
