@@ -6,10 +6,10 @@ import path from 'path';
 
 export class ModelsBuilder {
   public options: QuestionOptionsInterface;
-  public modelsDirOrigin = path.join(__dirname, 'models/entities');
-  public moduleTemplate = require('./templates/module');
-  public serviceTemplate = require('./templates/service');
-  public controllerTemplate = require('./templates/controller');
+  //   public modelsDirOrigin = path.join(__dirname, 'models/entities');
+  //   public moduleTemplate = require('./templates/module');
+  //   public serviceTemplate = require('./templates/service');
+  //   public controllerTemplate = require('./templates/controller');
 
   constructor(options: QuestionOptionsInterface) {
     this.options = options;
@@ -36,9 +36,16 @@ export class ModelsBuilder {
   create() {
     const { host, db_name, db_port, user, password, engine, pattern } =
       this.options;
-
+    console.log(
+      { host, db_name, db_port, user, password, engine, pattern },
+      'saaaaaa'
+    );
+    console.log('-------------------------------');
+    console.log(
+      `npx typeorm-model-generator -h ${host} -d ${db_name} -p ${db_port} -u ${user} -x ${password} -e ${engine} -o .`
+    );
     runNpmCommand(
-      `typeorm-model-generator -h ${host} -d ${db_name} -p ${db_port} -u ${user} -x ${password} -e ${engine} -o .`
+      `npx typeorm-model-generator -h ${host} -d ${db_name} -p ${db_port} -u ${user} -x ${password} -e ${engine} -o .`
     );
     // fs.readdir(this.modelsDirOrigin, function (err, files) {
     //   //handling error
