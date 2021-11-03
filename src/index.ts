@@ -10,9 +10,11 @@ const fs = require('fs');
 const path = require('path');
 const program = new Command();
 program.version('0.0.1');
+//console.log(path.join(__dirname) +"../../.."  )
 
-new ModelsBuilder(dummyAnswers).create();
-
+const models = new ModelsBuilder(dummyAnswers);
+models.create();
+console.log(models.modelFiles);
 // const generateModels = new GenerateModels(program, inquirer);
 
 // generateModels.create((answers) => {

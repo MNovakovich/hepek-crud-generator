@@ -1,10 +1,18 @@
-const { execSync , exec} = require('child_process');
-export async function runNpmCommand(cmd){
+const { execSync } = require('child_process');
+export  function runNpmCommand(cmd){
     console.log('packages are istalling ...')
-    var child = await exec(cmd);
-
-    setTimeout(() => {
+    try {
+        var child =  execSync(cmd);
         console.log('succesfully istalled packages')
-    },5000)
+        return true;
+    } catch (error) {
+        return false;
+         console.log(error, ' - error')
+    }
+  
+
+   
+        
+ 
 };
   

@@ -1,6 +1,9 @@
 export type frameworkType = 'expressjs' | 'nextjs';
 export type EngineType = 'mysql' | 'postgres' | 'mssql' | 'sqlite';
 export type PatternType = 'DDD' | 'repository';
+
+
+
 export interface QuestionOptionsInterface {
   host: string;
   db_name: string;

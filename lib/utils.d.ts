@@ -1,2 +1,2 @@
-export declare function runNpmCommand(cmd: any): Promise<void>;
+export declare function runNpmCommand(cmd: any): boolean;
 //# sourceMappingURL=utils.d.ts.map

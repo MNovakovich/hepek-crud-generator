@@ -1,4 +1,5 @@
-import { frameworkType } from "../interfaces";
+import { FrameworkEnum } from '../constants';
+import { frameworkType } from '../interfaces';
 
 class GenerateModels {
   public program: any;
@@ -12,18 +13,19 @@ class GenerateModels {
 
   public create(cb) {
     this.program
-      .command("generate:models")
+      .command('generate:models')
       .description(
-        "generate models based on database. For the time beign it just suport mysql engene."
+        'generate models based on database. For the time beign it just suport mysql engene.'
       )
-      .alias("gm")
+      .alias('gm')
       .action(async (options) => {
         let data: any = {};
         const cliQuestions = await this.cliQuestions();
         data = { ...cliQuestions };
         data.framework = cliQuestions.framework.toLowerCase();
+        data.pattern = cliQuestions.pattern.toLowerCase();
 
-        if (data.framework === "nestjs") {
+        if (data.framework === FrameworkEnum.nestjs) {
           const { next_crud } = await this.askAboutNextCrudLibrary();
           data.next_crud = next_crud;
         }
@@ -35,57 +37,57 @@ class GenerateModels {
   async cliQuestions() {
     const data = await this.inquirer.prompt([
       {
-        type: "input",
-        name: "host",
-        message: "DB Host:",
-        default: "localhost",
+        type: 'input',
+        name: 'host',
+        message: 'DB Host:',
+        default: 'localhost',
         //default: "false"
       },
       {
-        type: "input",
-        name: "db_name",
-        message: "DB Name:",
+        type: 'input',
+        name: 'db_name',
+        message: 'DB Name:',
         //default: "false"
       },
       {
-        type: "input",
-        name: "db_port",
-        message: "Db Port:",
+        type: 'input',
+        name: 'db_port',
+        message: 'Db Port:',
         default: 3306,
       },
       {
-        type: "input",
-        name: "user",
-        message: "DB User:",
-        default: "root",
+        type: 'input',
+        name: 'user',
+        message: 'DB User:',
+        default: 'root',
       },
       {
-        type: "password",
-        name: "password",
-        message: "DB Password:",
-        mask: "*",
-        default: "",
+        type: 'password',
+        name: 'password',
+        message: 'DB Password:',
+        mask: '*',
+        default: '',
       },
       {
-        type: "list",
-        name: "engine",
-        message: "DB Engine:",
-        choices: ["mysql", "postgres", "mssql", "sqlite"],
+        type: 'list',
+        name: 'engine',
+        message: 'DB Engine:',
+        choices: ['mysql', 'postgres', 'mssql', 'sqlite'],
 
-        default: "mysql",
+        default: 'mysql',
       },
       {
-        type: "list",
-        name: "framework",
-        message: "Which framewor do you want to use:",
-        choices: ["NestJS", "ExpressJS"],
+        type: 'list',
+        name: 'framework',
+        message: 'Which framewor do you want to use:',
+        choices: ['NestJS', 'ExpressJS'],
         //default: "false"
       },
       {
-        type: "list",
-        name: "pattern",
-        message: "Which Structural Pattern you want to use:",
-        choices: ["DDD", "Repository"],
+        type: 'list',
+        name: 'pattern',
+        message: 'Which Structural Pattern you want to use:',
+        choices: ['DDD', 'Repository'],
         //default: "false"
       },
     ]);
@@ -96,10 +98,10 @@ class GenerateModels {
   public async askAboutNextCrudLibrary() {
     const data = await this.inquirer.prompt([
       {
-        type: "confirm",
-        name: "next_crud",
-        message: "Do you want to use @nestjs/crud library?",
-        default: "false",
+        type: 'confirm',
+        name: 'next_crud',
+        message: 'Do you want to use @nestjs/crud library?',
+        default: 'false',
       },
     ]);
 
