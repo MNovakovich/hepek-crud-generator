@@ -12,13 +12,15 @@ const program = new Command();
 program.version('0.0.1');
 //console.log(path.join(__dirname) +"../../.."  )
 
-// const models = new ModelsBuilder(dummyAnswers);
 // models.create();
 //console.log(models.modelFiles);
 const generateModels = new GenerateModels(program, inquirer);
 
 generateModels.create((answers) => {
   //  execSync('npm install moment', { stdio: 'inherit', cwd: 'path/to/dir' });
+  const models = new ModelsBuilder(answers);
+  models.create();
+  return false;
   if (answers.framework === 'nestjs') {
     if (answers.next_crud) {
       runNpmCommand(

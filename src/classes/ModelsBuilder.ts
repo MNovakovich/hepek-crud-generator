@@ -2,18 +2,14 @@ import { QuestionOptionsInterface, PatternType } from '../interfaces';
 import { runNpmCommand } from '../utils';
 import { EngineEnum, PatternEnum } from '../constants';
 import { ModuleTemplate } from '../templates/ModuleTemplate';
-import fs from 'fs';
-import path from 'path';
-//('models/entities');
+const fs = require('fs');
+const path = require('path');
+const replaceFile = require('replace-in-file');
 
 export class ModelsBuilder {
   public oroginEntitiesDir = './src/entities';
   public modelFiles = [];
   public options: QuestionOptionsInterface;
-  //   public modelsDirOrigin = path.join(__dirname, 'models/entities');
-  //   public moduleTemplate = require('./templates/module');
-  //   public serviceTemplate = require('./templates/service');
-  //   public controllerTemplate = require('./templates/controller');
 
   constructor(options: QuestionOptionsInterface) {
     this.options = options;
@@ -25,25 +21,11 @@ export class ModelsBuilder {
       return;
     }
   }
-  /**
- * 
- *   host: string;
-  db_name: string;
-  db_port: number;
-  user: string;
-  password: string;
-  engine: string | EngineType;
-  framework: string;
-  pattern: string | PatternType;
-  next_crud?: boolean;
- */
+
   create() {
     const { host, db_name, db_port, user, password, engine, pattern } =
       this.options;
-    // console.log(
-    //   { host, db_name, db_port, user, password, engine, pattern },
-    //   'saaaaaa'
-    // );
+
     runNpmCommand(
       `npx typeorm-model-generator -h ${host} -d ${db_name} -p ${db_port} -u ${user} -x ${password} -e ${engine} -o ./src`
     );
@@ -71,11 +53,11 @@ export class ModelsBuilder {
         return console.log('Unable to scan directory: ' + err);
       }
 
-      //listing all files using forEach
       files.forEach(function (file) {
         that.resourceBuilder(file, files);
       });
     });
+    this.removeOriginModelsFolder();
   }
 
   removeOriginModelsFolder() {
@@ -107,7 +89,8 @@ export class ModelsBuilder {
     this.generateEntityFiels(dirName, file, entityFile);
     // create new module file
     fs.writeFileSync(pth, moduleTmp, { encoding: 'utf8' });
-
+    const entityPath = dirName + '/' + entityFile;
+    this.replaceEntityPaths(files, entityPath);
     // const serviceTmp = serviceTemplate(moduleName, entityFile)
     // const controllerTmp = controllerTemplate(moduleName, entityFile, serviceFile);
     // let originModulePath = modulesDir + '/' + file;
@@ -122,9 +105,32 @@ export class ModelsBuilder {
           console.error(error);
           return;
         }
-
         console.log('Copied Successfully!');
       }
     );
+  }
+
+  async replaceEntityPaths(files, modelFile) {
+    try {
+      let originModulePath = modelFile;
+      const filesFromRaplace = files.map((file) => {
+        let model = file.split('.')[0].toString();
+        return `from "./${model}"`;
+      });
+
+      const filesToRaplace = files.map((file) => {
+        let model = file.split('.')[0].toLowerCase().toString();
+        return `from '../${model}/${model}.entity'`;
+      });
+
+      const options = {
+        files: originModulePath.toString(),
+        from: filesFromRaplace,
+        to: filesToRaplace,
+      };
+      const results = await replaceFile(options);
+    } catch (error) {
+      console.log(error.message, ' - error');
+    }
   }
 }
