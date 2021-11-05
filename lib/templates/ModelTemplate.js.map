@@ -1,1 +1,1 @@
-{"version":3,"file":"ModelTemplate.js","sourceRoot":"","sources":["../../src/templates/ModelTemplate.ts"],"names":[],"mappings":";;;AACA;IAAA;IAWA,CAAC;IARI,+BAAM,GAAN;QACI,OAAO,CAAC,GAAG,CAAC,YAAY,CAAC,CAAA;IAC9B,CAAC;IACD,gCAAO,GAAP;QACK,OAAO,CAAC,GAAG,CAAC,eAAe,CAAC,CAAA;IACjC,CAAC;IAGL,qBAAC;AAAD,CAAC,AAXD,IAWC;AAXY,wCAAc"}
+{"version":3,"file":"ModelTemplate.js","sourceRoot":"","sources":["../../src/templates/ModelTemplate.ts"],"names":[],"mappings":""}

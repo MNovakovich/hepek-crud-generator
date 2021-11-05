@@ -1,9 +1,9 @@
 export default {
   host: 'localhost',
-  db_name: 'node_db',
+  db_name: 'node_bp',
   db_port: 3306,
   user: 'root',
-  password: '',
+  password: 'root',
   engine: 'mysql',
   framework: 'nestjs',
   pattern: 'ddd',

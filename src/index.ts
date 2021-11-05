@@ -12,26 +12,26 @@ const program = new Command();
 program.version('0.0.1');
 //console.log(path.join(__dirname) +"../../.."  )
 
-const models = new ModelsBuilder(dummyAnswers);
-models.create();
-console.log(models.modelFiles);
-// const generateModels = new GenerateModels(program, inquirer);
+// const models = new ModelsBuilder(dummyAnswers);
+// models.create();
+//console.log(models.modelFiles);
+const generateModels = new GenerateModels(program, inquirer);
 
-// generateModels.create((answers) => {
-//   //  execSync('npm install moment', { stdio: 'inherit', cwd: 'path/to/dir' });
-//   if (answers.framework === 'nestjs') {
-//     if (answers.next_crud) {
-//       runNpmCommand(
-//         'npm i @nestjsx/crud @nestjsx/crud-request @nestjsx/crud-typeorm'
-//       );
-//     }
-//     // console.log("create next crud");
-//   } else if (answers.framework === 'expressjs') {
-//     console.log('create expressjs');
-//   }
-// });
+generateModels.create((answers) => {
+  //  execSync('npm install moment', { stdio: 'inherit', cwd: 'path/to/dir' });
+  if (answers.framework === 'nestjs') {
+    if (answers.next_crud) {
+      runNpmCommand(
+        'npm i @nestjsx/crud @nestjsx/crud-request @nestjsx/crud-typeorm'
+      );
+    }
+    // console.log("create next crud");
+  } else if (answers.framework === 'expressjs') {
+    console.log('create expressjs');
+  }
+});
 
-// program.parse(process.argv);
+program.parse(process.argv);
 
 // function myParseInt(value, dummyPrevious) {
 //     // parseInt takes a string and a radix

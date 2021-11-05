@@ -77,6 +77,17 @@ export class ModelsBuilder {
       });
     });
   }
+
+  removeOriginModelsFolder() {
+    const newDir = './src/entities';
+    fs.rmdir(newDir, { recursive: true }, (err) => {
+      if (err) {
+        throw err;
+      }
+
+      console.log(`${newDir} is deleted!`);
+    });
+  }
   resourceBuilder(file, files) {
     const modelName = file.split('.')[0];
     const entity = modelName.toLowerCase();
@@ -88,18 +99,32 @@ export class ModelsBuilder {
     const dirName = 'src/' + entity;
 
     const moduleTmp = new ModuleTemplate(modelName).nextJs();
-    const pth = path.join() + '/' + dirName + '/' + entityFile;
-    console.log(pth);
-    fs.writeFile(pth, moduleTmp, function (err) {
-      if (err) return console.log(err);
-    });
-
-    // const serviceTmp = serviceTemplate(moduleName, entityFile)
-    // const controllerTmp = controllerTemplate(moduleName, entityFile, serviceFile);
-    // let originModulePath = modulesDir + '/' + file;
+    const pth = path.join() + '/' + dirName + '/' + moduleFile;
 
     if (!fs.existsSync(dirName)) {
       fs.mkdirSync(dirName);
     }
+    this.generateEntityFiels(dirName, file, entityFile);
+    // create new module file
+    fs.writeFileSync(pth, moduleTmp, { encoding: 'utf8' });
+
+    // const serviceTmp = serviceTemplate(moduleName, entityFile)
+    // const controllerTmp = controllerTemplate(moduleName, entityFile, serviceFile);
+    // let originModulePath = modulesDir + '/' + file;
+  }
+
+  generateEntityFiels(dirName, file, entityFile) {
+    fs.copyFile(
+      this.oroginEntitiesDir + '/' + file,
+      path.join() + '/' + dirName + '/' + entityFile,
+      (error) => {
+        if (error) {
+          console.error(error);
+          return;
+        }
+
+        console.log('Copied Successfully!');
+      }
+    );
   }
 }
