@@ -1,1 +1,1 @@
-{"version":3,"file":"ControllerTemplate.d.ts","sourceRoot":"","sources":["../../src/templates/ControllerTemplate.ts"],"names":[],"mappings":"AAgBA,qBAAa,kBAAkB;IACtB,SAAS,EAAE,MAAM,CAAC;gBACb,SAAS,KAAA;IAIrB,UAAU;IACV,UAAU;IAwBV,OAAO;CAGR"}
+{"version":3,"file":"ControllerTemplate.d.ts","sourceRoot":"","sources":["../../src/templates/ControllerTemplate.ts"],"names":[],"mappings":"AAgBA,qBAAa,kBAAkB;IACtB,SAAS,EAAE,MAAM,CAAC;gBACb,SAAS,KAAA;IAIrB,UAAU;IACV,UAAU;IAoBV,OAAO;CAGR"}

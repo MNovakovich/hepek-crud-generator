@@ -2,6 +2,7 @@ import { QuestionOptionsInterface, PatternType } from '../interfaces';
 import { runNpmCommand } from '../utils';
 import { EngineEnum, PatternEnum } from '../constants';
 import { ModuleTemplate } from '../templates/ModuleTemplate';
+import { ControllerTemplate } from '../templates/ControllerTemplate';
 const fs = require('fs');
 const path = require('path');
 const replaceFile = require('replace-in-file');
@@ -80,17 +81,25 @@ export class ModelsBuilder {
     //create new directory
     const dirName = 'src/' + entity;
 
-    const moduleTmp = new ModuleTemplate(modelName).nextJs();
-    const pth = path.join() + '/' + dirName + '/' + moduleFile;
-
     if (!fs.existsSync(dirName)) {
       fs.mkdirSync(dirName);
     }
-    this.generateEntityFiels(dirName, file, entityFile);
+
     // create new module file
+    const moduleTmp = new ModuleTemplate(modelName).nextJs();
+    const pth = path.join() + '/' + dirName + '/' + moduleFile;
+
+    this.generateEntityFiels(dirName, file, entityFile);
+
     fs.writeFileSync(pth, moduleTmp, { encoding: 'utf8' });
     const entityPath = dirName + '/' + entityFile;
     this.replaceEntityPaths(files, entityPath);
+
+    // Create controllers
+    const controllerTmp = new ControllerTemplate(modelName).nestJsCrud();
+    const controllerPth = dirName + '/' + entity + '.controller.ts';
+    fs.writeFileSync(controllerPth, controllerTmp, { encoding: 'utf8' });
+
     // const serviceTmp = serviceTemplate(moduleName, entityFile)
     // const controllerTmp = controllerTemplate(moduleName, entityFile, serviceFile);
     // let originModulePath = modulesDir + '/' + file;

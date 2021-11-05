@@ -22,28 +22,24 @@ export class ControllerTemplate {
 
   nextJsCore() {}
   nestJsCrud() {
-    const moduleFile = this.modelName.toLowerCase() + '.entity.ts';
-    const serviceFile = this.modelName.toLowerCase() + '.service.ts';
-    return `
-    import { Controller } from "@nestjs/common";
-    import { Crud, CrudController } from "@nestjsx/crud";
-    import { ApiTags } from "@nestjs/swagger";
-    import { ${this.modelName} } from './${moduleFile}';
-    import { ${this.modelName}Service } from './${serviceFile.slice(0, -3)}';
+    const moduleFile = this.modelName.toLowerCase() + '.entity';
+    const serviceFile = this.modelName.toLowerCase() + '.service';
+    return `import { Controller } from "@nestjs/common";
+import { Crud, CrudController } from "@nestjsx/crud";
+import { ApiTags } from "@nestjs/swagger";
+import { ${this.modelName} } from './${moduleFile}';
+import { ${this.modelName}Service } from './${serviceFile}';
 
-    @ApiTags('${this.modelName}')
-    @Crud({
-        model: {
-            type: ${this.modelName},
-        },
-    })
-    @Controller("${this.modelName}")
-    export class ${this.modelName}Controller implements CrudController<${
-      this.modelName
-    }> {
-    constructor(public service: ${this.modelName}Service) {}
-    }
-   `;
+@ApiTags('${this.modelName}')
+@Crud({
+  model: {
+    type: ${this.modelName},
+  },
+})
+@Controller('${this.modelName}')
+export class ${this.modelName}Controller implements CrudController<${this.modelName}> {
+  constructor(public service: ${this.modelName}Service) {}
+}`;
   }
   express() {
     console.log('createExpress');
