@@ -2,7 +2,7 @@ import { TemplateInterface } from './template.interface';
 export declare class ControllerTemplate implements TemplateInterface {
     modelName: string;
     constructor(modelName: any);
-    nextJsCore(): void;
+    nextJsCore(): string;
     nestJsCrud(): string;
     express(): void;
 }

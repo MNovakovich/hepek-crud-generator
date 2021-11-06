@@ -1,6 +1,6 @@
 import { QuestionOptionsInterface, PatternType } from '../interfaces';
 import { runNpmCommand } from '../utils';
-import { EngineEnum, PatternEnum } from '../constants';
+import { EngineEnum, FrameworkEnum, PatternEnum } from '../constants';
 import { ModuleTemplate } from '../templates/ModuleTemplate';
 import { ControllerTemplate } from '../templates/ControllerTemplate';
 import { ServiceTemplate } from '../templates/ServiceTemplate';
@@ -48,6 +48,19 @@ export class ModelsBuilder {
       }
     } catch (error) {}
   }
+
+  private getModules(dir, callback) {
+    const modules = [];
+    fs.readdir(dir, function (err, files) {
+      if (err) {
+        return console.log('Unable to scan directory: ' + err);
+      }
+
+      files.forEach(function (file) {
+        modules.push(file);
+      });
+    });
+  }
   private generateDomainFolders() {
     const that = this;
     fs.readdir(this.oroginEntitiesDir, function (err, files) {
@@ -77,8 +90,6 @@ export class ModelsBuilder {
     const entity = modelName.toLowerCase();
     const entityFile = entity + '.entity.ts';
     const moduleFile = entity + '.module.ts';
-    const serviceFile = entity + '.service.ts';
-    const controllerFile = entity + '.controller.ts';
     //create new directory
     const dirName = 'src/' + entity;
 
@@ -97,14 +108,28 @@ export class ModelsBuilder {
     this.replaceEntityPaths(files, entityPath);
 
     // Create controllers
-    const controllerTmp = new ControllerTemplate(modelName).nestJsCrud();
+    const controllerTmp = new ControllerTemplate(modelName).nextJsCore();
     const controllerPth = dirName + '/' + entity + '.controller.ts';
     fs.writeFileSync(controllerPth, controllerTmp, { encoding: 'utf8' });
+    // create services;
+    this.createService(modelName);
+  }
 
-    // Create service
-    const serviceTmp = new ServiceTemplate(modelName).nestJsCrud();
-    const servicePth = dirName + '/' + entity + '.service.ts';
-    fs.writeFileSync(servicePth, serviceTmp, { encoding: 'utf8' });
+  createService(modelName) {
+    const entity = modelName.toLowerCase();
+    const serviceTmp = new ServiceTemplate(modelName);
+    let servicePth = '';
+    if (this.options.pattern === PatternEnum.ddd) {
+      servicePth = 'src/' + entity + '/' + entity + '.service.ts';
+    } else {
+      const servicesDir = 'src/services/';
+      if (!fs.existsSync(servicesDir)) fs.mkdirSync(servicesDir);
+      servicePth = 'src/services/' + entity + '.service.ts';
+    }
+    const template = this.options.next_crud
+      ? serviceTmp.nestJsCrud()
+      : serviceTmp.nextJsCore();
+    fs.writeFileSync(servicePth, template, { encoding: 'utf8' });
   }
 
   generateEntityFiels(dirName, file, entityFile) {
