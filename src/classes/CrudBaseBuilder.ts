@@ -8,7 +8,7 @@ const fs = require('fs');
 const path = require('path');
 const replaceFile = require('replace-in-file');
 
-export class ModelsBuilder {
+export class CrudBaseBuilder {
   public oroginEntitiesDir = './src/entities';
   public modelFiles = [];
   public options: QuestionOptionsInterface;

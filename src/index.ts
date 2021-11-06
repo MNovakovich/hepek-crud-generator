@@ -1,5 +1,6 @@
 #!/usr/bin/env node
-import { ModelsBuilder } from './classes/ModelsBuilder';
+import { CrudBaseBuilder } from './classes/CrudBaseBuilder';
+import { NestJsCrud } from './classes/NestJsCrud';
 import { Command, InvalidArgumentError } from 'commander';
 import { GenerateModels } from './commands';
 import { runNpmCommand } from './utils';
@@ -10,28 +11,26 @@ const fs = require('fs');
 const path = require('path');
 const program = new Command();
 program.version('0.0.1');
-//console.log(path.join(__dirname) +"../../.."  )
 
-// models.create();
-//console.log(models.modelFiles);
 const generateModels = new GenerateModels(program, inquirer);
+const models = new NestJsCrud(dummyAnswers);
+models.create();
 
-generateModels.create((answers) => {
-  //  execSync('npm install moment', { stdio: 'inherit', cwd: 'path/to/dir' });
-  const models = new ModelsBuilder(answers);
-  models.create();
-  return false;
-  if (answers.framework === 'nestjs') {
-    if (answers.next_crud) {
-      runNpmCommand(
-        'npm i @nestjsx/crud @nestjsx/crud-request @nestjsx/crud-typeorm'
-      );
-    }
-    // console.log("create next crud");
-  } else if (answers.framework === 'expressjs') {
-    console.log('create expressjs');
-  }
-});
+// generateModels.create((answers) => {
+//   //  execSync('npm install moment', { stdio: 'inherit', cwd: 'path/to/dir' });
+
+//   return false;
+//   if (answers.framework === 'nestjs') {
+//     if (answers.next_crud) {
+//       runNpmCommand(
+//         'npm i @nestjsx/crud @nestjsx/crud-request @nestjsx/crud-typeorm'
+//       );
+//     }
+//     // console.log("create next crud");
+//   } else if (answers.framework === 'expressjs') {
+//     console.log('create expressjs');
+//   }
+// });
 
 program.parse(process.argv);
 

@@ -3,7 +3,7 @@ export default {
   db_name: 'node_bp',
   db_port: 3306,
   user: 'root',
-  password: 'root',
+  password: '',
   engine: 'mysql',
   framework: 'nestjs',
   pattern: 'ddd',
