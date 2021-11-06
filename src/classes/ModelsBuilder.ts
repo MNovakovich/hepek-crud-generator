@@ -3,6 +3,7 @@ import { runNpmCommand } from '../utils';
 import { EngineEnum, PatternEnum } from '../constants';
 import { ModuleTemplate } from '../templates/ModuleTemplate';
 import { ControllerTemplate } from '../templates/ControllerTemplate';
+import { ServiceTemplate } from '../templates/ServiceTemplate';
 const fs = require('fs');
 const path = require('path');
 const replaceFile = require('replace-in-file');
@@ -100,9 +101,10 @@ export class ModelsBuilder {
     const controllerPth = dirName + '/' + entity + '.controller.ts';
     fs.writeFileSync(controllerPth, controllerTmp, { encoding: 'utf8' });
 
-    // const serviceTmp = serviceTemplate(moduleName, entityFile)
-    // const controllerTmp = controllerTemplate(moduleName, entityFile, serviceFile);
-    // let originModulePath = modulesDir + '/' + file;
+    // Create service
+    const serviceTmp = new ServiceTemplate(modelName).nestJsCrud();
+    const servicePth = dirName + '/' + entity + '.service.ts';
+    fs.writeFileSync(servicePth, serviceTmp, { encoding: 'utf8' });
   }
 
   generateEntityFiels(dirName, file, entityFile) {

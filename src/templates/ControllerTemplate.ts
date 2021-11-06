@@ -1,20 +1,6 @@
-interface ControllerInterface {
-  framework: 'expressjs' | 'nestjs';
-  pattern: 'repository' | 'ddd';
-  nestJsCrud(): any;
-  nestCore(): any;
-  express(): any;
-}
+import { TemplateInterface } from './template.interface';
 
-abstract class ControllerBuilderCore {
-  modelName: string;
-  moduleFile: string;
-  serviceFile: string;
-  abstract nextJsCore();
-  abstract nestJsCrud();
-}
-
-export class ControllerTemplate {
+export class ControllerTemplate implements TemplateInterface {
   public modelName: string;
   constructor(modelName) {
     this.modelName = modelName;
