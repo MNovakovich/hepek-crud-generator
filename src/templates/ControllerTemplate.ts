@@ -1,14 +1,24 @@
 import { TemplateInterface } from './template.interface';
-
+import { PatternEnum } from '../constants';
 export class ControllerTemplate implements TemplateInterface {
   public modelName: string;
-  constructor(modelName) {
-    this.modelName = modelName;
+  public modelFile: string;
+  public pattern: string;
+  public serviceFile: string;
+
+  constructor(model, pattern) {
+    this.modelName = model.modelName;
+    this.modelFile = model.modelFile;
+    this.pattern = pattern;
+    this.serviceFile =
+      pattern === PatternEnum.ddd
+        ? './' + model.modelFile + '.service'
+        : '../services/' + this.modelFile + '.service';
   }
 
   nextJsCore() {
-    const entity = this.modelName.toLocaleLowerCase();
-    const serviceFile = './' + entity + '.service';
+    const entity = this.modelFile; // this.modelName.toLocaleLowerCase();
+
     return `import {
     Controller,
     Get,
@@ -20,7 +30,7 @@ export class ControllerTemplate implements TemplateInterface {
     Query,
     UseGuards,
   } from '@nestjs/common';
-import { ${this.modelName}Service } from '${serviceFile}';
+import { ${this.modelName}Service } from '${this.serviceFile}';
 //import { CreatePostDto } from './dto/create-post.dto';
 //import { UpdatePostDto } from './dto/update-post.dto';
 import { ApiQuery, ApiTags } from '@nestjs/swagger';
@@ -58,13 +68,16 @@ export class ${this.modelName}Controller {
 }`;
   }
   nestJsCrud() {
-    const moduleFile = this.modelName.toLowerCase() + '.entity';
-    const serviceFile = this.modelName.toLowerCase() + '.service';
+    const model =
+      this.pattern === PatternEnum.ddd
+        ? './' + this.modelFile + '.entity'
+        : '../models/' + this.modelName;
+
     return `import { Controller } from "@nestjs/common";
 import { Crud, CrudController } from "@nestjsx/crud";
 import { ApiTags } from "@nestjs/swagger";
-import { ${this.modelName} } from './${moduleFile}';
-import { ${this.modelName}Service } from './${serviceFile}';
+import { ${this.modelName} } from '${model}';
+import { ${this.modelName}Service } from '${this.serviceFile}';
 
 @ApiTags('${this.modelName}')
 @Crud({

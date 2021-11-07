@@ -2,8 +2,6 @@ export type frameworkType = 'expressjs' | 'nextjs';
 export type EngineType = 'mysql' | 'postgres' | 'mssql' | 'sqlite';
 export type PatternType = 'DDD' | 'repository';
 
-
-
 export interface QuestionOptionsInterface {
   host: string;
   db_name: string;
@@ -13,5 +11,5 @@ export interface QuestionOptionsInterface {
   engine: string | EngineType;
   framework: string;
   pattern: string | PatternType;
-  next_crud?: boolean;
+  nest_crud?: boolean;
 }

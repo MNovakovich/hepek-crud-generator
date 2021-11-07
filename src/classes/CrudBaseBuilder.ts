@@ -10,7 +10,6 @@ const replaceFile = require('replace-in-file');
 
 export class CrudBaseBuilder {
   public oroginEntitiesDir = './src/entities';
-  public modelFiles = [];
   public options: QuestionOptionsInterface;
 
   constructor(options: QuestionOptionsInterface) {
@@ -126,7 +125,7 @@ export class CrudBaseBuilder {
       if (!fs.existsSync(servicesDir)) fs.mkdirSync(servicesDir);
       servicePth = 'src/services/' + entity + '.service.ts';
     }
-    const template = this.options.next_crud
+    const template = this.options.nest_crud
       ? serviceTmp.nestJsCrud()
       : serviceTmp.nextJsCore();
     fs.writeFileSync(servicePth, template, { encoding: 'utf8' });
@@ -147,6 +146,8 @@ export class CrudBaseBuilder {
   }
 
   async replaceEntityPaths(files, modelFile) {
+    console.log(files);
+    console.log(modelFile, 'moodel file');
     try {
       let originModulePath = modelFile;
       const filesFromRaplace = files.map((file) => {

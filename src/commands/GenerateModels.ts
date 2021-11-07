@@ -26,8 +26,8 @@ class GenerateModels {
         data.pattern = cliQuestions.pattern.toLowerCase();
 
         if (data.framework === FrameworkEnum.nestjs) {
-          const { next_crud } = await this.askAboutNextCrudLibrary();
-          data.next_crud = next_crud;
+          const { nest_crud } = await this.askAboutNextCrudLibrary();
+          data.nest_crud = nest_crud;
         }
 
         cb(data);
@@ -99,7 +99,7 @@ class GenerateModels {
     const data = await this.inquirer.prompt([
       {
         type: 'confirm',
-        name: 'next_crud',
+        name: 'nest_crud',
         message: 'Do you want to use @nestjs/crud library?',
         default: 'false',
       },
