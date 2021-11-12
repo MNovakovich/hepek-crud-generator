@@ -9,6 +9,7 @@ import { NestJsCrud } from './classes/NestJsCrud';
 import { ModuleTemplate } from './templates/ModuleTemplate';
 import { ServiceTemplate } from './templates/ServiceTemplate';
 import { ControllerTemplate } from './templates/ControllerTemplate';
+import { ModuleExporter } from './classes/ModuleImporter';
 var inquirer = require('inquirer');
 
 const fs = require('fs');
@@ -60,6 +61,7 @@ generateCrud.create((answers) => {
       controllerTemplate: ControllerTemplate,
     });
   });
+  new ModuleExporter.add(models);
 });
 program.parse(process.argv);
 
