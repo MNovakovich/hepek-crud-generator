@@ -1,5 +1,5 @@
-import { TemplateInterface } from "./template.interface";
-import { PatternEnum } from "../constants";
+import { TemplateInterface } from './template.interface';
+import { PatternEnum } from '../constants';
 export class ServiceTemplate implements TemplateInterface {
   public modelName: string;
   public modelFile: string;
@@ -11,8 +11,8 @@ export class ServiceTemplate implements TemplateInterface {
     this.pattern = pattern;
     this.modelFile =
       pattern === PatternEnum.ddd
-        ? "./" + model.modelFile + ".entity"
-        : "../models/" + model.modelFile;
+        ? './' + model.modelFile + '.entity'
+        : '../models/' + model.modelFile;
     this.entityFile = model.modelFile;
   }
 
@@ -20,9 +20,9 @@ export class ServiceTemplate implements TemplateInterface {
     const entity = this.entityFile;
     return `import { ConflictException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { 
-  IPaginationResponse, 
-  pagination 
+import {
+  IPaginationResponse,
+  pagination,
 } from 'nest-crud-hepek/lib/pagination';
 import { Repository } from 'typeorm';
 import { Create${this.modelName}Dto } from './dto/create-${entity}.dto';
@@ -63,12 +63,12 @@ export class ${this.modelName}Service {
   }
 
   remove(id: number) {
-    return this.${this.modelName}Repository.delete(id);
+    return this.${this.entityFile}Repository.delete(id);
   }
 }`;
   }
   nestJsCrud() {
-    const entity = this.modelName.toLowerCase() + ".entity";
+    const entity = this.modelName.toLowerCase() + '.entity';
     return `import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { TypeOrmCrudService } from '@nestjsx/crud-typeorm';
@@ -80,9 +80,10 @@ export class ${this.modelName}Service extends TypeOrmCrudService<${this.modelNam
   constructor(@InjectRepository(${this.modelName}) repo) {
     super(repo);
   }
-}`;
+}
+`;
   }
   express() {
-    console.log("createExpress");
+    console.log('createExpress');
   }
 }

@@ -21,6 +21,7 @@ class GenerateModels {
       .action(async (options) => {
         let data: any = {};
         const cliQuestions = await this.cliQuestions();
+        console.log(cliQuestions, 'questions');
         data = { ...cliQuestions };
         data.framework = cliQuestions.framework.toLowerCase();
         data.pattern = cliQuestions.pattern.toLowerCase();
@@ -56,6 +57,14 @@ class GenerateModels {
         default: 3306,
       },
       {
+        type: 'list',
+        name: 'engine',
+        message: 'DB Engine:',
+        choices: ['mysql', 'postgres', 'mssql', 'sqlite'],
+
+        default: 'mysql',
+      },
+      {
         type: 'input',
         name: 'user',
         message: 'DB User:',
@@ -67,14 +76,6 @@ class GenerateModels {
         message: 'DB Password:',
         mask: '*',
         default: '',
-      },
-      {
-        type: 'list',
-        name: 'engine',
-        message: 'DB Engine:',
-        choices: ['mysql', 'postgres', 'mssql', 'sqlite'],
-
-        default: 'mysql',
       },
       {
         type: 'list',

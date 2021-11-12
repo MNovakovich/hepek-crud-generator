@@ -1,6 +1,7 @@
 export declare class ModuleTemplate {
     private modelName;
-    constructor(modelName: any);
+    modelFile: string;
+    constructor(model: any, pattern: any);
     nextJs(): string;
     express(): void;
 }

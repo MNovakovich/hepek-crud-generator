@@ -1,5 +1,5 @@
-import { TemplateInterface } from "./template.interface";
-import { PatternEnum } from "../constants";
+import { TemplateInterface } from './template.interface';
+import { PatternEnum } from '../constants';
 export class ControllerTemplate implements TemplateInterface {
   public modelName: string;
   public modelFile: string;
@@ -12,16 +12,16 @@ export class ControllerTemplate implements TemplateInterface {
     this.pattern = pattern;
     this.serviceFile =
       pattern === PatternEnum.ddd
-        ? "./" + model.modelFile + ".service"
-        : "../services/" + this.modelFile + ".service";
+        ? './' + model.modelFile + '.service'
+        : '../services/' + this.modelFile + '.service';
   }
 
   nextJsCore() {
     const entity = this.modelFile; // this.modelName.toLocaleLowerCase();
     const model =
       this.pattern === PatternEnum.ddd
-        ? "./" + this.modelFile + ".entity"
-        : "../models/" + this.modelName;
+        ? './' + this.modelFile + '.entity'
+        : '../models/' + this.modelName;
 
     return `import {
   Controller,
@@ -73,8 +73,8 @@ export class ${this.modelName}Controller {
   nestJsCrud() {
     const model =
       this.pattern === PatternEnum.ddd
-        ? "./" + this.modelFile + ".entity"
-        : "../models/" + this.modelName;
+        ? './' + this.modelFile + '.entity'
+        : '../models/' + this.modelName;
 
     return `import { Controller } from '@nestjs/common';
 import { Crud, CrudController } from '@nestjsx/crud';
@@ -91,9 +91,10 @@ import { ${this.modelName}Service } from '${this.serviceFile}';
 @Controller('${this.modelName}')
 export class ${this.modelName}Controller implements CrudController<${this.modelName}> {
   constructor(public service: ${this.modelName}Service) {}
-}`;
+}
+`;
   }
   express() {
-    console.log("createExpress");
+    console.log('createExpress');
   }
 }

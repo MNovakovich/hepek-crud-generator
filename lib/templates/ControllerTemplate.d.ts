@@ -1,4 +1,4 @@
-import { TemplateInterface } from "./template.interface";
+import { TemplateInterface } from './template.interface';
 export declare class ControllerTemplate implements TemplateInterface {
     modelName: string;
     modelFile: string;

@@ -1,16 +1,16 @@
-import { QuestionOptionsInterface } from "../interfaces";
-import { PatternEnum } from "../constants";
-import { runNpmCommand } from "../utils";
-const fs = require("fs");
-const path = require("path");
-const replaceFile = require("replace-in-file");
+import { QuestionOptionsInterface } from '../interfaces';
+import { PatternEnum } from '../constants';
+import { runNpmCommand } from '../utils';
+const fs = require('fs');
+const path = require('path');
+const replaceFile = require('replace-in-file');
 
 export class ModelsBuilder {
-  public originEntitiesDir = "./src/entities";
+  public originEntitiesDir = './src/entities';
   options: QuestionOptionsInterface;
   constructor(options: QuestionOptionsInterface) {
     this.options = options;
-    console.log(options, "model builder");
+    console.log(options, 'model builder');
   }
 
   create() {
@@ -32,12 +32,12 @@ export class ModelsBuilder {
     return false;
   }
   private renameEntitiesFolder(): void {
-    const newDir = "./src/models";
+    const newDir = './src/models';
     try {
       if (fs.existsSync(this.originEntitiesDir)) {
         fs.renameSync(this.originEntitiesDir, newDir);
       } else {
-        console.log("Directory Entities does not exist.");
+        console.log('Directory Entities does not exist.');
       }
     } catch (error) {}
   }
@@ -46,7 +46,7 @@ export class ModelsBuilder {
     const that = this;
     fs.readdir(this.originEntitiesDir, function (err, files) {
       if (err) {
-        return console.log("Unable to scan directory: " + err);
+        return console.log('Unable to scan directory: ' + err);
       }
 
       files.forEach(function (file) {
@@ -66,13 +66,13 @@ export class ModelsBuilder {
     });
   }
   resourceBuilder(file, files) {
-    const modelName = file.split(".")[0];
+    const modelName = file.split('.')[0];
     const entity = this.entityName(modelName);
-    const entityFile = entity + ".entity.ts";
+    const entityFile = entity + '.entity.ts';
 
     //create new directory
-    const dirName = "src/" + entity;
-    const entityFilePath = dirName + "/" + entityFile;
+    const dirName = 'src/' + entity;
+    const entityFilePath = dirName + '/' + entityFile;
     if (!fs.existsSync(dirName)) {
       fs.mkdirSync(dirName);
     }
@@ -83,8 +83,8 @@ export class ModelsBuilder {
   }
   generateEntityFiels(dirName, file, entityFile, cb) {
     fs.copyFile(
-      this.originEntitiesDir + "/" + file,
-      path.join() + "/" + dirName + "/" + entityFile,
+      this.originEntitiesDir + '/' + file,
+      path.join() + '/' + dirName + '/' + entityFile,
       (error) => {
         if (error) {
           cb(true);
@@ -92,7 +92,7 @@ export class ModelsBuilder {
           return;
         }
         cb(false);
-        console.log("Copied Successfully!");
+        console.log('Copied Successfully!');
       }
     );
   }
@@ -101,7 +101,7 @@ export class ModelsBuilder {
     try {
       let originModulePath = modelFile;
       const filesFromRaplace = files.map((file) => {
-        let model = file.split(".")[0].toString();
+        let model = file.split('.')[0].toString();
         return `from "./${model}"`;
       });
 
@@ -116,41 +116,41 @@ export class ModelsBuilder {
       };
       const results = await replaceFile(options);
     } catch (error) {
-      console.log(error.message, " - error");
+      console.log(error.message, ' - error');
     }
   }
   entityName(model: string): string {
     const nameArr = model.match(/[A-Z][a-z]+/g);
-    return nameArr.join("_").toLowerCase();
+    return nameArr.join('_').toLowerCase();
   }
 
-  getModels() {
-    if (this.options.pattern === PatternEnum.ddd) {
-      const rootFolder = "src/";
+  static getModels(pattern: 'ddd' | 'repository') {
+    if (pattern === PatternEnum.ddd) {
+      const rootFolder = 'src/';
       const folders = fs.readdirSync(rootFolder);
       const data = [];
       const excluded = [
-        "classes",
-        "commands",
-        "templates",
-        "shared",
-        "helpers",
-        "entities",
+        'classes',
+        'commands',
+        'templates',
+        'shared',
+        'helpers',
+        'entities',
       ];
       folders.forEach((file: string) => {
-        const modelName = file.split(".")[0];
+        const modelName = file.split('.')[0];
         const model = file;
         const folderName = `${rootFolder}${model}/`;
 
         if (fs.existsSync(folderName) && !excluded.includes(file)) {
-          const modelArr = file.includes("_") && file.split("_");
+          const modelArr = file.includes('_') && file.split('_');
           const model =
-            typeof modelArr == "object"
+            typeof modelArr == 'object'
               ? modelArr
                   .map((item) => {
                     return item.charAt(0).toUpperCase() + item.substr(1);
                   })
-                  .join("")
+                  .join('')
               : modelName.charAt(0).toUpperCase() + modelName.substr(1);
 
           data.push({
@@ -161,10 +161,10 @@ export class ModelsBuilder {
       });
       return data;
     } else {
-      const modelDir = "src/models";
+      const modelDir = 'src/models';
       const files = fs.readdirSync(modelDir);
       return files.map((file) => {
-        const model = file.split(".")[0];
+        const model = file.split('.')[0];
         return { modelName: model, modelFile: model };
       });
     }
