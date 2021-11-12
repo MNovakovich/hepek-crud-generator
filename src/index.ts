@@ -1,36 +1,48 @@
 #!/usr/bin/env node
-import { CrudBaseBuilder } from './classes/CrudBaseBuilder';
-import { Command, InvalidArgumentError } from 'commander';
-import { GenerateModels } from './commands';
-import { runNpmCommand } from './utils';
-import dummyAnswers from './testdata';
-import { ModelsBuilder } from './classes/ModelsBuilder';
-import { NestJsCrud } from './classes/NestJsCrud';
-import { ModuleTemplate } from './templates/ModuleTemplate';
-import { ServiceTemplate } from './templates/ServiceTemplate';
-import { ControllerTemplate } from './templates/ControllerTemplate';
-var inquirer = require('inquirer');
+import { CrudBaseBuilder } from "./classes/CrudBaseBuilder";
+import { Command, InvalidArgumentError } from "commander";
+import { GenerateModels } from "./commands";
+import { runNpmCommand } from "./utils";
+import dummyAnswers from "./testdata";
+import { ModelsBuilder } from "./classes/ModelsBuilder";
+import { NestJsCrud } from "./classes/NestJsCrud";
+import { ModuleTemplate } from "./templates/ModuleTemplate";
+import { ServiceTemplate } from "./templates/ServiceTemplate";
+import { ControllerTemplate } from "./templates/ControllerTemplate";
+var inquirer = require("inquirer");
 
-const fs = require('fs');
-const path = require('path');
+const fs = require("fs");
+const path = require("path");
 const program = new Command();
-program.version('0.0.1');
+program.version("0.0.1");
 
 const generateModels = new GenerateModels(program, inquirer);
 const models = new ModelsBuilder(dummyAnswers);
 models.create();
+
 const modelsList = models.getModels();
-console.log(modelsList, 'model list');
-const dummyModel = { modelName: 'TaskTag', modelFile: 'task_tag' };
-const nestCrud = new NestJsCrud(dummyModel, {
-  nest_crud: dummyAnswers.nest_crud,
-  pattern: dummyAnswers.pattern,
+
+modelsList.forEach((model) => {
+  const nestCrud = new NestJsCrud(model, {
+    nest_crud: dummyAnswers.nest_crud,
+    pattern: dummyAnswers.pattern,
+  });
+  nestCrud.build({
+    moduleTemplate: ModuleTemplate,
+    serviceTemplate: ServiceTemplate,
+    controllerTemplate: ControllerTemplate,
+  });
 });
-nestCrud.build({
-  moduleTemplate: ModuleTemplate,
-  serviceTemplate: ServiceTemplate,
-  controllerTemplate: ControllerTemplate,
-});
+// const dummyModel = { modelName: "TaskTag", modelFile: "task_tag" };
+// const nestCrud = new NestJsCrud(dummyModel, {
+//   nest_crud: dummyAnswers.nest_crud,
+//   pattern: dummyAnswers.pattern,
+// });
+// nestCrud.build({
+//   moduleTemplate: ModuleTemplate,
+//   serviceTemplate: ServiceTemplate,
+//   controllerTemplate: ControllerTemplate,
+// });
 // generateModels.create((answers) => {
 //   //  execSync('npm install moment', { stdio: 'inherit', cwd: 'path/to/dir' });
 

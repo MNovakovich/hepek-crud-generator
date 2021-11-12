@@ -19,6 +19,6 @@ import { ${this.modelName} } from './${fileName}.entity';
 export class ${this.modelName}Module {}`;
   }
   express() {
-    console.log('createExpress');
+    console.log("createExpress");
   }
 }
