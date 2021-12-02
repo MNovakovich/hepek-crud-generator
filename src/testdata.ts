@@ -5,7 +5,4 @@ export default {
   user: 'root',
   password: 'root',
   engine: 'mysql',
-  framework: 'nestjs',
-  pattern: 'ddd',
-  next_crud: true,
 };

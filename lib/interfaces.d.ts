@@ -9,7 +9,5 @@ export interface QuestionOptionsInterface {
     password: string;
     engine: string | EngineType;
     framework: string;
-    pattern: string | PatternType;
-    next_crud?: boolean;
 }
 //# sourceMappingURL=interfaces.d.ts.map

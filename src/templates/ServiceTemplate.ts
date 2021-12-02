@@ -11,18 +11,17 @@ export class ServiceTemplate implements TemplateInterface {
     const entity = this.modelName.toLocaleLowerCase();
     const entityFile = entity + '.entity';
     return `import { ConflictException, Injectable } from '@nestjs/common';
-    import { InjectRepository } from '@nestjs/typeorm';
-    import { IPaginationResponse, pagination } from 'src/shered/helpers/pagination';
-    import { Repository } from 'typeorm';
-    import { CreatePostDto } from './dto/create-post.dto';
-    import { UpdatePostDto } from './dto/update-post.dto';
-    import { ${this.modelName} } from '${entityFile}';
+    import { InjectModel } from '@nestjs/sequelize';
+    import { PaginateDecorator, IPaginationResponse } from 'src/common/pagination';
+    // import { CreatePostDto } from './dto/create-post.dto';
+    // import { UpdatePostDto } from './dto/update-post.dto';
+    import { ${this.modelName} } from './${entityFile}';
 
     
     @Injectable()
     export class ${this.modelName}Service {
       constructor(
-        @InjectRepository(${this.modelName}) private ${entity}Repository: Repository<any>,
+        @InjectModel(${this.modelName}) private ${entity}Repository: typeof ${this.modelName},
       ) {}
       async create(create${this.modelName}Dto: Create${this.modelName}Dto) {
     
@@ -30,12 +29,13 @@ export class ServiceTemplate implements TemplateInterface {
         return await this.${entity}Repository.save(result);
       }
     
-      async findAll(query): Promise<IPainationResponse<${this.modelName}>> {
-        const options = {
-          offset: 2,
-          page: query.page,
-        };
-        return await pagination(this.${entity}Repository, options);
+      async findAll(query): Promise<IPaginationResponse<${this.modelName}>> {
+     
+        const data =  await new PaginateDecorator<${this.modelName}>({
+          model:this.${entity}Repository,   options: { limit: Number(query.limit) },
+          query: { order: [['email', 'ASC']] },
+        });
+        return data.getResult(query.page);
       }
     
       findOne(id: number) {
@@ -57,21 +57,6 @@ export class ServiceTemplate implements TemplateInterface {
         return this.${this.modelName}Repository.delete(id);
       }
     }`;
-  }
-  nestJsCrud() {
-    const entity = this.modelName.toLowerCase() + '.entity';
-    return `import { Injectable } from "@nestjs/common";
-import { InjectRepository } from "@nestjs/typeorm";
-import { TypeOrmCrudService } from "@nestjsx/crud-typeorm";
-
-import { ${this.modelName} } from "./${entity}";
-
-@Injectable()
-export class ${this.modelName}Service extends TypeOrmCrudService<${this.modelName}> {
-    constructor(@InjectRepository(${this.modelName}) repo) {
-        super(repo);
-    }
-}`;
   }
   express() {
     console.log('createExpress');

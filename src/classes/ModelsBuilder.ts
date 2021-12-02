@@ -9,7 +9,7 @@ const path = require('path');
 const replaceFile = require('replace-in-file');
 
 export class ModelsBuilder {
-  public oroginEntitiesDir = './src/entities';
+  public oroginEntitiesDir = './entities';
   public modelFiles = [];
   public options: QuestionOptionsInterface;
 
@@ -18,38 +18,19 @@ export class ModelsBuilder {
     console.log(options, 'model builder');
   }
 
-  init() {
-    if (this.options.pattern === PatternEnum.ddd) {
-      return;
-    }
-  }
+  init() {}
 
   create() {
-    const { host, db_name, db_port, user, password, engine, pattern } =
-      this.options;
+    const { host, db_name, db_port, user, password, engine } = this.options;
 
     runNpmCommand(
-      `npx typeorm-model-generator -h ${host} -d ${db_name} -p ${db_port} -u ${user} -x ${password} -e ${engine} -o ./src`
+      `npx stg -D ${engine} -h  ${host} -p  ${db_port} -d ${db_name} -u ${user}  -x ${password} --indices --dialect-options-file  --case camel --out-dir ${this.oroginEntitiesDir}`
     );
-    if (pattern == PatternEnum.ddd) {
-      this.generateDomainFolders();
-    } else {
-      this.renameEntitiesFolder();
-    }
+
+    this.generateDomainFolders();
   }
 
-  private renameEntitiesFolder(): void {
-    const newDir = './src/models';
-    try {
-      if (fs.existsSync(this.oroginEntitiesDir)) {
-        fs.renameSync(this.oroginEntitiesDir, newDir);
-      } else {
-        console.log('Directory Entities does not exist.');
-      }
-    } catch (error) {}
-  }
-
-  private getModules(dir, callback) {
+  public getModules(dir, callback) {
     const modules = [];
     fs.readdir(dir, function (err, files) {
       if (err) {
@@ -76,13 +57,12 @@ export class ModelsBuilder {
   }
 
   removeOriginModelsFolder() {
-    const newDir = './src/entities';
-    fs.rmdir(newDir, { recursive: true }, (err) => {
+    fs.rmdir(this.oroginEntitiesDir, { recursive: true }, (err) => {
       if (err) {
         throw err;
       }
 
-      console.log(`${newDir} is deleted!`);
+      console.log(`${this.oroginEntitiesDir} is deleted!`);
     });
   }
   resourceBuilder(file, files) {
@@ -91,7 +71,8 @@ export class ModelsBuilder {
     const entityFile = entity + '.entity.ts';
     const moduleFile = entity + '.module.ts';
     //create new directory
-    const dirName = 'src/' + entity;
+    if (entity === 'index') return false;
+    const dirName = 'src/domains/' + entity;
 
     if (!fs.existsSync(dirName)) {
       fs.mkdirSync(dirName);
@@ -118,17 +99,9 @@ export class ModelsBuilder {
   createService(modelName) {
     const entity = modelName.toLowerCase();
     const serviceTmp = new ServiceTemplate(modelName);
-    let servicePth = '';
-    if (this.options.pattern === PatternEnum.ddd) {
-      servicePth = 'src/' + entity + '/' + entity + '.service.ts';
-    } else {
-      const servicesDir = 'src/services/';
-      if (!fs.existsSync(servicesDir)) fs.mkdirSync(servicesDir);
-      servicePth = 'src/services/' + entity + '.service.ts';
-    }
-    const template = this.options.next_crud
-      ? serviceTmp.nestJsCrud()
-      : serviceTmp.nextJsCore();
+    let servicePth = 'src/domains/' + entity + '/' + entity + '.service.ts';
+
+    const template = serviceTmp.nextJsCore();
     fs.writeFileSync(servicePth, template, { encoding: 'utf8' });
   }
 

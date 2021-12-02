@@ -22,14 +22,6 @@ class GenerateModels {
         let data: any = {};
         const cliQuestions = await this.cliQuestions();
         data = { ...cliQuestions };
-        data.framework = cliQuestions.framework.toLowerCase();
-        data.pattern = cliQuestions.pattern.toLowerCase();
-
-        if (data.framework === FrameworkEnum.nestjs) {
-          const { next_crud } = await this.askAboutNextCrudLibrary();
-          data.next_crud = next_crud;
-        }
-
         cb(data);
       });
   }
@@ -75,20 +67,6 @@ class GenerateModels {
         choices: ['mysql', 'postgres', 'mssql', 'sqlite'],
 
         default: 'mysql',
-      },
-      {
-        type: 'list',
-        name: 'framework',
-        message: 'Which framewor do you want to use:',
-        choices: ['NestJS', 'ExpressJS'],
-        //default: "false"
-      },
-      {
-        type: 'list',
-        name: 'pattern',
-        message: 'Which Structural Pattern you want to use:',
-        choices: ['DDD', 'Repository'],
-        //default: "false"
       },
     ]);
 

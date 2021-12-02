@@ -8,11 +8,11 @@ export class ModuleTemplate {
     return `import { Module } from '@nestjs/common';
 import { ${this.modelName}Service } from './${fileName}.service';
 import { ${this.modelName}Controller } from './${fileName}.controller';
-import { TypeOrmModule } from '@nestjs/typeorm';
+import { SequelizeModule } from '@nestjs/sequelize';
 import { ${this.modelName} } from './${fileName}.entity';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([ ${this.modelName} ])],
+  imports: [SequelizeModule.forFeature([ ${this.modelName} ])],
   controllers: [${this.modelName}Controller],
   providers: [${this.modelName}Service],
 })
