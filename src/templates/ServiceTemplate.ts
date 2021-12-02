@@ -10,7 +10,7 @@ export class ServiceTemplate implements TemplateInterface {
   nextJsCore() {
     const entity = this.modelName.toLocaleLowerCase();
     const entityFile = entity + '.entity';
-    return `import { ConflictException, Injectable } from '@nestjs/common';
+    return `import { HttpException, HttpStatus, ConflictException, Injectable } from '@nestjs/common';
     import { InjectModel } from '@nestjs/sequelize';
     import { PaginateDecorator, IPaginationResponse } from 'src/common/pagination';
     // import { CreatePostDto } from './dto/create-post.dto';
@@ -26,7 +26,7 @@ export class ServiceTemplate implements TemplateInterface {
       async create(create${this.modelName}Dto: Create${this.modelName}Dto) {
     
         const result = await this.${entity}Repository.create({createPostDto});
-        return await this.${entity}Repository.save(result);
+        return return result;
       }
     
       async findAll(query): Promise<IPaginationResponse<${this.modelName}>> {
@@ -44,17 +44,14 @@ export class ServiceTemplate implements TemplateInterface {
     
       async update(id: number, update${this.modelName}Dto: Update${this.modelName}Dto): Promise<any> {
         const result = await this.${entity}Repository.findOne({ where: { id } });
-        if (!result) {
-          throw new ConflictException("${entity} doesn't exist");
-        }
-        return this.${entity}Repository.update(id, {
-          ...result,
-          ...update${this.modelName}Dto,
-        });
+        if (!user)
+        return new HttpException('user not exist!', HttpStatus.BAD_REQUEST);
+        return await this.${entity}Repository.update(data);
+  
       }
     
       remove(id: number) {
-        return this.${this.modelName}Repository.delete(id);
+        return this.${this.modelName}Repository.destroy({ where: { id }});
       }
     }`;
   }
