@@ -1,10 +1,11 @@
+import { formatUpperCaseToUnderline } from '../helpers';
 export class ModuleTemplate {
   private modelName: string;
   constructor(modelName) {
     this.modelName = modelName;
   }
   nextJs() {
-    let fileName = this.modelName.toLowerCase();
+    let fileName = formatUpperCaseToUnderline(this.modelName);
     return `import { Module } from '@nestjs/common';
 import { ${this.modelName}Service } from './${fileName}.service';
 import { ${this.modelName}Controller } from './${fileName}.controller';

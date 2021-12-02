@@ -4,6 +4,8 @@ import { EngineEnum, FrameworkEnum, PatternEnum } from '../constants';
 import { ModuleTemplate } from '../templates/ModuleTemplate';
 import { ControllerTemplate } from '../templates/ControllerTemplate';
 import { ServiceTemplate } from '../templates/ServiceTemplate';
+import { DtoTemplates } from '../templates/DtoTemplates';
+import { formatUpperCaseToUnderline } from '../helpers';
 const fs = require('fs');
 const path = require('path');
 const replaceFile = require('replace-in-file');
@@ -24,7 +26,7 @@ export class ModelsBuilder {
     const { host, db_name, db_port, user, password, engine } = this.options;
 
     runNpmCommand(
-      `npx stg -D ${engine} -h  ${host} -p  ${db_port} -d ${db_name} -u ${user}  -x ${password} --indices --dialect-options-file  --case camel --out-dir ${this.oroginEntitiesDir}`
+      `npx stg -D ${engine} -h  ${host} -p  ${db_port} -d ${db_name} -u ${user}  -x ${password} --indices --dialect-options-file  --case pascal:underscore --out-dir ${this.oroginEntitiesDir}`
     );
 
     this.generateDomainFolders();
@@ -67,15 +69,17 @@ export class ModelsBuilder {
   }
   resourceBuilder(file, files) {
     const modelName = file.split('.')[0];
-    const entity = modelName.toLowerCase();
+    const entity = formatUpperCaseToUnderline(modelName);
     const entityFile = entity + '.entity.ts';
     const moduleFile = entity + '.module.ts';
     //create new directory
     if (entity === 'index') return false;
     const dirName = 'src/domains/' + entity;
+    const dtoFolder = 'src/domains/' + entity + '/dto';
 
     if (!fs.existsSync(dirName)) {
       fs.mkdirSync(dirName);
+      fs.mkdirSync(dtoFolder);
     }
 
     // create new module file
@@ -94,15 +98,28 @@ export class ModelsBuilder {
     fs.writeFileSync(controllerPth, controllerTmp, { encoding: 'utf8' });
     // create services;
     this.createService(modelName);
+    this.createDtoFiles(modelName);
   }
 
   createService(modelName) {
-    const entity = modelName.toLowerCase();
+    const entity = formatUpperCaseToUnderline(modelName);
     const serviceTmp = new ServiceTemplate(modelName);
     let servicePth = 'src/domains/' + entity + '/' + entity + '.service.ts';
 
     const template = serviceTmp.nextJsCore();
     fs.writeFileSync(servicePth, template, { encoding: 'utf8' });
+  }
+
+  createDtoFiles(modelName) {
+    const entity = formatUpperCaseToUnderline(modelName);
+    const dtoTemplate = new DtoTemplates(modelName);
+    let createDto =
+      'src/domains/' + entity + '/dto/create-' + entity + '.dto.ts';
+    let updateDto =
+      'src/domains/' + entity + '/dto/update-' + entity + '.dto.ts';
+
+    fs.writeFileSync(createDto, dtoTemplate.createDto(), { encoding: 'utf8' });
+    fs.writeFileSync(updateDto, dtoTemplate.updateDto(), { encoding: 'utf8' });
   }
 
   generateEntityFiels(dirName, file, entityFile) {
@@ -123,12 +140,12 @@ export class ModelsBuilder {
     try {
       let originModulePath = modelFile;
       const filesFromRaplace = files.map((file) => {
-        let model = file.split('.')[0].toString();
+        let model = formatUpperCaseToUnderline(file.split('.')[0]).toString();
         return `from "./${model}"`;
       });
 
       const filesToRaplace = files.map((file) => {
-        let model = file.split('.')[0].toLowerCase().toString();
+        let model = formatUpperCaseToUnderline(file.split('.')[0]).toString();
         return `from '../${model}/${model}.entity'`;
       });
 
