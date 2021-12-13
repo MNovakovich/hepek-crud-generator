@@ -25,13 +25,8 @@ export class ${this.modelName}Service {
     return result;
   }
 
-  async findAll(query): Promise<IPaginationResponse<${this.modelName}>> {
-    const data = await new PaginateDecorator<${this.modelName}>({
-      model: this.${entity}Repository,
-      options: { limit: Number(query.limit) },
-      //query: { order: [['email', 'ASC']] },
-    });
-    return data.getResult(query.page);
+  async findAll(query:any): Promise<${this.modelName}[]> {
+    return await this.${entity}Repository.findAll({});
   }
 
   async findOne(id: number) {
@@ -55,3 +50,12 @@ export class ${this.modelName}Service {
     console.log('createExpress');
   }
 }
+/*
+
+ const data = await new PaginateDecorator<${this.modelName}>({
+      model: this.${entity}Repository,
+      options: { limit: Number(query.limit) },
+      //query: { order: [['email', 'ASC']] },
+    });
+
+    */

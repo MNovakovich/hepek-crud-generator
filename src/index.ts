@@ -20,20 +20,33 @@ generateModels.create((answers) => {
   //  execSync('npm install moment', { stdio: 'inherit', cwd: 'path/to/dir' });
   const models = new ModelsBuilder(answers);
   models.create();
-  return false;
-  if (answers.framework === 'nestjs') {
-    if (answers.next_crud) {
-      runNpmCommand(
-        'npm i @nestjsx/crud @nestjsx/crud-request @nestjsx/crud-typeorm'
-      );
-    }
-    // console.log("create next crud");
-  } else if (answers.framework === 'expressjs') {
-    console.log('create expressjs');
-  }
 });
 
 program.parse(process.argv);
+/**
+ * 
+ * //console.log(path.join(__dirname) +"../../.."  )
+
+// const modules = ['UserModule', 'RoleModule'];
+// const stream = fs.createWriteStream('./src/exported-domains.ts', {
+//   overwrite: false,
+//   flags: 'a',
+// });
+
+// modules.forEach((item) => {
+//   const template = `import {${item} } from './${item}.module';\n`;
+//   stream.write(template);
+// });
+
+// stream.write(`export default [\n`);
+// modules.forEach((item) => {
+//   const template = `${item},\n`;
+//   stream.write(template);
+// });
+// stream.write(']');
+// stream.end();
+
+ */
 
 // function myParseInt(value, dummyPrevious) {
 //     // parseInt takes a string and a radix

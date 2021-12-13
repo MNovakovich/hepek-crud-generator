@@ -44,16 +44,58 @@ export class ModelsBuilder {
       });
     });
   }
+  public exportAllModels(files) {
+    ///   const template = `import {${item} } from './${item}.module';\n`;
+    //   stream.write(template);
+    const stream = fs.createWriteStream('./src/exported-models.ts', {
+      overwrite: false,
+      flags: 'a',
+    });
+    const excludedModules = ['index', 'SequelizeMeta'];
+    files.forEach((item) => {
+      const modelName = item.slice(0, -3);
+
+      if (!excludedModules.includes(modelName.toString())) {
+        const modelFolder = formatUpperCaseToUnderline(item);
+        const template = `import { ${modelName}Module } from './domains/${modelFolder}/${modelFolder}.module';
+import { ${modelName} } from './domains/${modelFolder}/${modelFolder}.entity';\n`;
+        stream.write(template);
+      }
+    });
+    stream.write('\n');
+    stream.write(`export const exportedModules = [\n`);
+    files.forEach((item) => {
+      const modelName = item.slice(0, -3);
+      if (!excludedModules.includes(modelName.toString())) {
+        const template = `\t${modelName}Module,\n`;
+        stream.write(template);
+      }
+    });
+
+    stream.write(']');
+    stream.write('\n\n');
+    stream.write(`export const exportedEntities = [\n`);
+    files.forEach((item) => {
+      const modelName = item.slice(0, -3);
+      console.log(modelName, typeof modelName.toString());
+      if (!excludedModules.includes(modelName.toString())) {
+        const template = `\t${modelName},\n`;
+        stream.write(template);
+      }
+    });
+    stream.write(']');
+    stream.end();
+  }
   private generateDomainFolders() {
     const that = this;
     fs.readdir(this.oroginEntitiesDir, function (err, files) {
       if (err) {
         return console.log('Unable to scan directory: ' + err);
       }
-
       files.forEach(function (file) {
         that.resourceBuilder(file, files);
       });
+      that.exportAllModels(files);
     });
     this.removeOriginModelsFolder();
   }

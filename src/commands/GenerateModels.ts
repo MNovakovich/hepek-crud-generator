@@ -68,6 +68,14 @@ class GenerateModels {
 
         default: 'mysql',
       },
+      {
+        type: 'list',
+        name: 'framework',
+        message: 'Select framework:',
+        choices: ['express', 'nestjs'],
+
+        default: 'express',
+      },
     ]);
 
     return data;
